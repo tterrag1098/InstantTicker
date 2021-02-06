@@ -69,7 +69,7 @@ public class TickerEmbedBuilder {
             currencyFmt = NumberFormat.getCurrencyInstance();
             currencyFmt.setCurrency(currency);
         }
-        if (stock.getQuote().getPrice().abs().compareTo(new BigDecimal("0.01")) < 0) {
+        if (stock.getQuote().getPrice().abs().compareTo(BigDecimal.ONE) < 0) {
             currencyFmt.setMaximumFractionDigits(6);
         }
         
