@@ -8,5 +8,5 @@ import com.tterrag.iticker.util.annotation.NonNullFields;
 @SuppressWarnings("null")
 public class Patterns {
 
-    public static final Pattern TICKER = Pattern.compile("(?:^|\\b)(?:\\$(?=[^^])|(?=\\^))(\\^?[A-Z0-9.=]+[A-Z0-9])(\\+?|\\b)");
+    public static final Pattern TICKER = Pattern.compile("(?:^|\\b)(?:\\$(?=[^^])|(?=\\^))(\\^?[A-Z0-9.=\\-]*[A-Z0-9])(\\+?|\\b)");
 }
