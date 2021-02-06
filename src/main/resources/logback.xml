@@ -1,30 +1,19 @@
-<configuration>
-  
-  <turboFilter class="com.tterrag.k9.logging.GatewayEventFilter">
-  	<Exclude>PRESENCE_UPDATE,GUILD_CREATE,GUILD_MEMBERS_CHUNK</Exclude>
-  </turboFilter>
-  
-  <turboFilter class="com.tterrag.k9.logging.PrettifyMessageCreate" />
-  
+<configuration>  
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-    
-    <filter class="com.tterrag.k9.logging.FrameDecoderFilter" />
-  
+      
     <encoder>
       <pattern>%d{HH:mm:ss} [%thread] %logger{24} %msg%n</pattern>
     </encoder>
   </appender>
   
-  <appender name="FILE-D4J" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/d4j.log</file>
-    
-    <filter class="com.tterrag.k9.logging.FrameDecoderFilter" />
-        
+  <appender name="FILE-ITICKER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/iticker.log</file>
+            
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- daily rollover -->
-      <fileNamePattern>logs/d4j.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <fileNamePattern>logs/iticker.%d{yyyy-MM-dd}.log</fileNamePattern>
 
       <!-- keep 7 days' worth of history capped at 256MB total size -->
       <maxHistory>7</maxHistory>
@@ -34,135 +23,13 @@
 
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} %msg%n</pattern>
-    </encoder>
-  </appender>
-  
-  <appender name="FILE-MESSAGES" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/messages.log</file>
-        
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover -->
-      <fileNamePattern>logs/messages.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-      <!-- keep 7 days' worth of history capped at 256MB total size -->
-      <maxHistory>7</maxHistory>
-      <totalSizeCap>256MB</totalSizeCap>
-
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} %msg%n</pattern>
-    </encoder>
-  </appender>
-  
-  <appender name="FILE-NETTY" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/netty.log</file>
-    
-    <filter class="com.tterrag.k9.logging.FrameDecoderFilter" />
-        
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover -->
-      <fileNamePattern>logs/netty.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-      <!-- keep 7 days' worth of history capped at 256MB total size -->
-      <maxHistory>7</maxHistory>
-      <totalSizeCap>256MB</totalSizeCap>
-
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} %msg%n</pattern>
-    </encoder>
-  </appender>
-  
-  <appender name="FILE-REACTOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/reactor.log</file>
-    
-    <filter class="com.tterrag.k9.logging.FrameDecoderFilter" />
-        
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover -->
-      <fileNamePattern>logs/reactor.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-      <!-- keep 7 days' worth of history capped at 256MB total size -->
-      <maxHistory>7</maxHistory>
-      <totalSizeCap>256MB</totalSizeCap>
-
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} %msg%n</pattern>
-    </encoder>
-  </appender>
-  
-  <appender name="FILE-K9" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/k9.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover -->
-      <fileNamePattern>logs/k9.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-      <!-- keep 7 days' worth of history capped at 256MB total size -->
-      <maxHistory>7</maxHistory>
-      <totalSizeCap>256MB</totalSizeCap>
-
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
-    </encoder>
-  </appender>
-  
-  <appender name="FILE-IRC" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/irc.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- daily rollover -->
-      <fileNamePattern>logs/irc.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-      <!-- keep 7 days' worth of history capped at 256MB total size -->
-      <maxHistory>7</maxHistory>
-      <totalSizeCap>256MB</totalSizeCap>
-
-    </rollingPolicy>
-
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
     </encoder>
   </appender>
   
   <appender name="NOP" class="ch.qos.logback.core.helpers.NOPAppender" />
-  
-  <logger name="discord4j" level="INFO">
-    <appender-ref ref="FILE-D4J" />
-  </logger>
-  
-  <logger name="discord4j.dispatch" level="INFO" />
-  
-  <logger name="discord4j.gateway.inbound" level="DEBUG">
-  	<appender-ref ref="NOP" />
-  </logger>
- 
-  <logger name="io.netty" level="DEBUG">
-  	<appender-ref ref="FILE-NETTY" />
-  </logger>
-  
-  <logger name="reactor" level="DEBUG">
-  	<appender-ref ref="FILE-REACTOR" />
-  </logger>
-
-  <logger name="com.tterrag.k9" level="INFO">
-    <appender-ref ref="FILE-K9" />
-  </logger>
-      
-  <logger name="com.tterrag.k9.messages" level="INFO" additivity="false">
-  	<appender-ref ref="FILE-MESSAGES" />
-  	<appender-ref ref="STDOUT" />
-  </logger>
-  
-  <logger name="org.pircbotx" level="DEBUG">
-  	<appender-ref ref="FILE-IRC" />
-  </logger>
 
   <root level="DEBUG">
   	<appender-ref ref="STDOUT" />
+  	<appender-ref ref="FILE-ITICKER" />
   </root>
 </configuration>
