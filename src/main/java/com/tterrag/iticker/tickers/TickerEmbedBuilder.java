@@ -3,6 +3,9 @@ package com.tterrag.iticker.tickers;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -60,14 +63,23 @@ public class TickerEmbedBuilder {
                         .flatMap(stock -> t.isAdvanced() ? createAdvancedEmbed(stock) : createEmbed(stock)));
     }
 
+    @SuppressWarnings("serial")
     private Mono<EmbedCreator.Builder> createEmbed(Stock stock) {
         EmbedCreator.Builder embed = EmbedCreator.builder();
         
-        Currency currency = Currency.getInstance(stock.getCurrency());
-        NumberFormat currencyFmt = NumberFormat.getCurrencyInstance(currencyLocaleMap.get(currency));
-        if (currencyFmt == null) {
+        NumberFormat currencyFmt;
+        try {
+            Currency currency = Currency.getInstance(stock.getCurrency());
+            currencyFmt = NumberFormat.getCurrencyInstance(currencyLocaleMap.get(currency));
+            if (currencyFmt == null) {
+                currencyFmt = NumberFormat.getCurrencyInstance();
+                currencyFmt.setCurrency(currency);
+            }
+        } catch (IllegalArgumentException e) { // Unknown currency
             currencyFmt = NumberFormat.getCurrencyInstance();
-            currencyFmt.setCurrency(currency);
+            DecimalFormatSymbols symbols = ((DecimalFormat)currencyFmt).getDecimalFormatSymbols();
+            symbols.setCurrencySymbol(stock.getCurrency());
+            ((DecimalFormat)currencyFmt).setDecimalFormatSymbols(symbols);
         }
         if (stock.getQuote().getPrice().abs().compareTo(BigDecimal.ONE) < 0) {
             currencyFmt.setMaximumFractionDigits(6);
