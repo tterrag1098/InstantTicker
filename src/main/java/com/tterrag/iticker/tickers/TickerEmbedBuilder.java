@@ -17,6 +17,7 @@ import java.util.Map;
 import com.tterrag.iticker.util.EmbedCreator;
 import com.tterrag.iticker.util.EmbedCreator.Builder;
 
+import discord4j.core.object.reaction.ReactionEmoji;
 import lombok.Value;
 import reactor.core.publisher.Mono;
 import yahoofinance.Stock;
@@ -63,6 +64,9 @@ public class TickerEmbedBuilder {
                         .flatMap(stock -> t.isAdvanced() ? createAdvancedEmbed(stock) : createEmbed(stock)));
     }
 
+    private static final ReactionEmoji.Unicode STONKS = ReactionEmoji.unicode("\uD83D\uDCC8");
+    private static final ReactionEmoji.Unicode NOT_STONKS = ReactionEmoji.unicode("\uD83D\uDCC9");
+
     @SuppressWarnings("serial")
     private Mono<EmbedCreator.Builder> createEmbed(Stock stock) {
         EmbedCreator.Builder embed = EmbedCreator.builder();
@@ -91,7 +95,7 @@ public class TickerEmbedBuilder {
         embed
             .color(color)
             .url("https://finance.yahoo.com/quote/" + stock.getSymbol())
-            .title("$" + stock.getSymbol())
+            .title((state >= 0 ? STONKS.getRaw() : NOT_STONKS.getRaw()) + " " + stock.getSymbol())
             .description(stock.getName())
             .field("Current Price", "**" + currencyFmt.format(stock.getQuote().getPrice()) + "**", true)
             .field("Change", (state < 0 ? "-" : "") + currencyFmt.format(stock.getQuote().getChange().abs()) + " (" + percentFmt.format(stock.getQuote().getChangeInPercent().divide(new BigDecimal(100))) + ")", true)
@@ -100,7 +104,7 @@ public class TickerEmbedBuilder {
         
         String logoUrl = "https://eodhistoricaldata.com/img/logos/US/" + stock.getSymbol() + ".png";
         return Mono.fromCallable(() -> ((HttpURLConnection) new URL(logoUrl).openConnection()).getResponseCode())
-                .map(code -> code >= 400 ? embed : embed.authorIcon(logoUrl))
+                .map(code -> code >= 400 ? embed : embed.thumbnail(logoUrl))
                 .onErrorReturn(embed);
     }
     
