@@ -86,14 +86,14 @@ public class TickerEmbedBuilder {
         }
         
         int state = stock.getQuote().getChange().signum();
-        int color = state < 0 ? 0xef5350 : state > 0 ? 0x26a69a : 0x444444; 
+        int color = state < 0 ? 0xef5350 : state > 0 ? 0x26a69a : 0x444444;
         
         embed
             .color(color)
-            .authorName("[" + stock.getSymbol() + "] " + stock.getName())
-            .authorUrl("https://finance.yahoo.com/quote/" + stock.getSymbol())
-            .title("Current Price")
-            .description("**" + currencyFmt.format(stock.getQuote().getPrice()) + "**")
+            .url("https://finance.yahoo.com/quote/" + stock.getSymbol())
+            .title("$" + stock.getSymbol())
+            .description(stock.getName())
+            .field("Current Price", "**" + currencyFmt.format(stock.getQuote().getPrice()) + "**", true)
             .field("Change", (state < 0 ? "-" : "") + currencyFmt.format(stock.getQuote().getChange().abs()) + " (" + percentFmt.format(stock.getQuote().getChangeInPercent().divide(new BigDecimal(100))) + ")", true)
             .footerText("as of")
             .timestamp(stock.getQuote().getLastTradeTime().toInstant());
